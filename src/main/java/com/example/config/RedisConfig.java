@@ -3,6 +3,7 @@ package com.example.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -21,10 +22,16 @@ public class RedisConfig implements BeanDefinitionRegistryPostProcessor, Environ
     private static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
     private Map<String, Object> redisConfigMap;
 
+    @Value("${maxTotal:1000}")
+    private int maxTotal;
+
+    @Value("${maxIdle:500}")
+    private int maxIdle;
+
     private JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxTotal(1000);
-        jedisPoolConfig.setMaxIdle(500);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setTestOnBorrow(false);
         jedisPoolConfig.setTestOnReturn(false);
         jedisPoolConfig.setTestWhileIdle(true);
